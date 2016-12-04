@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sharetribe
 
 [![CircleCI](https://circleci.com/gh/sharetribe/sharetribe/tree/master.svg?style=svg)](https://circleci.com/gh/sharetribe/sharetribe/tree/master) [![Dependency Status](https://gemnasium.com/sharetribe/sharetribe.png)](https://gemnasium.com/sharetribe/sharetribe) [![Code Climate](https://codeclimate.com/github/sharetribe/sharetribe.png)](https://codeclimate.com/github/sharetribe/sharetribe)
@@ -425,3 +426,7 @@ The forum is a great place to ask support and help for example with issues durin
 ## MIT License
 
 Sharetribe is open source under the MIT license. See [LICENSE](LICENSE) for details.
+=======
+# heywork
+heywork - sharetribe
+>>>>>>> a718d12fced6ba5382a24236e6b57880cb6123aa
