@@ -1,0 +1,36 @@
+%h2 Stripe Payment List
+%table{:border => "0", :cellpadding => "0", :cellspacing => "0", :style => "border-bottom:1px solid #ededed;padding-bottom:5px;padding-top: 20px;", :width => "100%"}
+  %thead
+    %tr
+      %th ID
+      %th Buyer
+      %th Seller
+      %th Listing url
+      %th Amount
+      %th Payment to
+      %th Transfer Amount
+  %tbody
+    - @stripe_payments.each do |sp|
+      %tr
+        %td
+          = sp.id
+        %td
+          ="#{sp.person.given_name} #{sp.person.family_name}"
+        %td 
+          = sp.listing.author.given_name
+        %td 
+          = sp.listing.title
+        %td
+          = sp.amount
+        %td
+          -if sp.stripe_connect
+            = 'Seller account'
+          - else
+            = "Admin account"
+
+        %td
+          - unless sp.stripe_connect
+            =link_to "Transfer to seller", '#'
+
+
+  
