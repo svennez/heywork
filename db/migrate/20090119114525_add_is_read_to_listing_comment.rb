@@ -1,6 +1,6 @@
 class AddIsReadToListingComment < ActiveRecord::Migration
   def self.up
-    add_column :listing_comments, :is_read, :integer, :default => 0
+    add_column :listing_comments, :is_read, :integer, :default => false
   end
 
   def self.down

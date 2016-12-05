@@ -1,7 +1,7 @@
 class AddCommentsCountToListings < ActiveRecord::Migration
 
   def self.up
-    add_column :listings, :comments_count, :integer, :default => 0
+    add_column :listings, :comments_count, :integer, :default => false
     Listing.reset_column_information
     Listing.select(:id).find_each do |l|
       Listing.reset_counters l.id, :comments

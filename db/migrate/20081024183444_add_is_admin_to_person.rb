@@ -1,6 +1,6 @@
 class AddIsAdminToPerson < ActiveRecord::Migration
   def self.up
-    add_column :people, :is_admin, :integer, :default => 0
+    add_column :people, :is_admin, :integer, :default => false
   end
 
   def self.down

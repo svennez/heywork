@@ -1,6 +1,6 @@
 class AddAmountToItems < ActiveRecord::Migration
   def self.up
-    add_column :items, :amount, :integer, :default => 1
+    add_column :items, :amount, :integer, :default => true
   end
 
   def self.down

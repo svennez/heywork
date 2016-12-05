@@ -21,7 +21,7 @@ class AddDeviseWithoutConfirmableToPeople < ActiveRecord::Migration
 
 ##        t.trackable
 ## => becomes with Devise 2.0 
-        t.integer  :sign_in_count, :default => 0
+        t.integer  :sign_in_count, :default => false
         t.datetime :current_sign_in_at
         t.datetime :last_sign_in_at
         t.string   :current_sign_in_ip

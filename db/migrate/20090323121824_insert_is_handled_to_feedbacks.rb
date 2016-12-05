@@ -1,6 +1,6 @@
 class InsertIsHandledToFeedbacks < ActiveRecord::Migration
   def self.up
-    add_column :feedbacks, :is_handled, :integer, :default => 0
+    add_column :feedbacks, :is_handled, :integer, :default => false
   end
 
   def self.down
