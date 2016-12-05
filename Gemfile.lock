@@ -359,6 +359,7 @@ GEM
       paypal-sdk-core (~> 0.3.0)
     paypal-sdk-permissions (1.96.4)
       paypal-sdk-core (~> 0.3.0)
+    pg (0.18.4)
     pkg-config (1.1.7)
     possibly (0.2.0)
     powerpack (0.1.1)
@@ -621,6 +622,7 @@ DEPENDENCIES
   passenger (~> 5.0.18)
   paypal-sdk-merchant (~> 1.116.0)
   paypal-sdk-permissions (~> 1.96.4)
+  pg
   possibly (~> 0.2.0)
   premailer (~> 1.8.2)
   protected_attributes (~> 1.1.3)
