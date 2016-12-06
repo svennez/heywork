@@ -87,6 +87,7 @@
 #  small_cover_photo_processing               :boolean
 #  favicon_processing                         :boolean
 #  deleted                                    :boolean
+#  stripe_fee                                 :float(24)        default(15.0)
 #
 # Indexes
 #

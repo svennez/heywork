@@ -150,6 +150,7 @@ group :development do
   gem 'better_errors', "~> 2.1.1"
   gem 'web-console', '~> 2.0'
   gem 'awesome_print', '~> 1.6.1'
+  gem 'mailcatcher'
 end
 
 group :test do
@@ -185,3 +186,7 @@ gem 'color', '~> 1.8'
 
 gem 'uuidtools', '~> 2.1'
 gem 'transit-ruby', '~> 0.8'
+
+gem 'httparty'
+gem 'stripe'
+gem 'pg'

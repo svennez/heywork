@@ -4,7 +4,7 @@ class SettingsController < ApplicationController
     controller.ensure_logged_in t("layouts.notifications.you_must_log_in_to_view_your_settings")
   end
 
-  before_filter EnsureCanAccessPerson.new(:person_id, error_message_key: "layouts.notifications.you_are_not_authorized_to_view_this_content"), except: :unsubscribe
+  before_filter EnsureCanAccessPerson.new(:person_id, error_message_key: "layouts.notifications.you_are_not_authorized_to_view_this_content"), except: [:unsubscribe, :connect_callback, :stripe_disconnet, :update_stripe_fee]
 
   def show
     target_user = Person.find_by!(username: params[:person_id], community_id: @current_community.id)
@@ -45,6 +45,43 @@ class SettingsController < ApplicationController
     else
       render :unsubscribe, :status => :unauthorized, locals: {target_user: target_user, unsubscribe_successful: false}
     end
+  end
+
+  def stripe_connect
+    url = APP_CONFIG.connect_url
+    redirect_to url
+  end
+
+  def connect_callback
+    api_secret = APP_CONFIG.stripe_secret
+    code = params[:code]
+
+    response = HTTParty.post("https://connect.stripe.com/oauth/token?client_secret=#{api_secret}&code=#{code}&grant_type=authorization_code")
+    stripe_account = StripeAccount.create_stripe_account(response, @current_user, @current_community)
+    flash[:notice] = 'Stripe account connected successfully'
+    redirect_to '/'
+  end
+
+  def stripe_disconnet
+    api_secret = APP_CONFIG.stripe_secret
+    stripe_account = StripeAccount.where(person_id: @current_user.id, community_id: @current_community.id).first
+
+    response = HTTParty.post("https://#{api_secret}:@connect.stripe.com/oauth/deauthorize?client_id=ca_9gex5cTJVgvFGTBwuKd266XiYsx4cav2&stripe_user_id=#{stripe_account.stripe_user_id}")
+    if response["stripe_user_id"].present?
+      stripe_account.destroy
+      flash[:notice] = 'Stripe account disconnected successfully'
+      redirect_to '/'
+    else
+      flash[:error] = response["error_description"]
+      redirect_to '/'
+    end
+  end
+
+  def update_stripe_fee
+    @current_community.stripe_fee = params[:community][:stripe_fee]
+    @current_community.save
+    flash[:notice] = "Stripe fee updated successfully"
+    redirect_to '/'
   end
 
   private

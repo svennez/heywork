@@ -131,3 +131,36 @@
     - if has_unfinished
       %p
         = t('settings.account.unfinished_transactions')
+
+
+  -# Stripe Connect
+  .account-settings-row
+    .ss-deleteuser.account-settings-icon
+    .account-settings-text
+      %b
+        / = t("settings.account.stripe_connect")
+        = 'Connect stripe account'
+    %p
+      - if @current_user.has_stripe_account(@current_community.id)
+        = 'Connected'
+        %br
+        = link_to 'Disconnect Now', stripe_disconnet_path
+      - else
+        = link_to 'Stripe connect',  stripe_connect_person_settings_path, class: "button"
+
+  -# Stripe fee percent
+  - if @current_user.is_marketplace_admin?
+    .account-settings-row
+      .ss-lock.account-settings-icon
+      .account-settings-text
+        %b
+          / = t("common.password") + ":"
+          = 'Stripe fee percent'
+      %p
+        = 'Stripe Fee: '
+        = @current_community.stripe_fee.nil? ? 0 : @current_community.stripe_fee
+        = '%'
+      .password-form
+        = form_for @current_community, url: update_stripe_fee_path, method: :post do |form|
+          = form.text_field :stripe_fee, :class => :text_field_account, :placeholder => 'Fee percent'
+          = form.button t(".save"), :class => "send_button_account"

@@ -368,6 +368,11 @@ Kassi::Application.routes.draw do
     resource :sms do
       get :message_arrived
     end
+    resources :stripe_payments, only: [:create, :index] do
+      collection do
+        get :amount_transfer_list
+      end
+    end
 
     devise_for :people, skip: :omniauth_callbacks, controllers: { confirmations: "confirmations", registrations: "people", omniauth_callbacks: "sessions"}, :path_names => { :sign_in => 'login'}
     devise_scope :person do
@@ -379,7 +384,11 @@ Kassi::Application.routes.draw do
       # List few specific routes here for Devise to understand those
       get "/signup" => "people#new", :as => :sign_up
       get '/people/auth/:provider/setup' => 'sessions#facebook_setup' #needed for devise setup phase hook to work
-
+      get '/connect_callback' => "settings#connect_callback"
+      get '/stripe_disconnet' => "settings#stripe_disconnet"
+      post '/update_stripe_fee', to: "settings#update_stripe_fee"
+      
+      
       resources :people, param: :username, :path => "", :only => :show, :constraints => { :username => /[_a-z0-9]{3,20}/ }
 
       resources :people, except: [:show] do
@@ -441,6 +450,7 @@ Kassi::Application.routes.draw do
             get :notifications
             get :payments
             get :unsubscribe
+            get :stripe_connect
           end
         end
         resources :testimonials

@@ -23,3 +23,15 @@
   = link_to logout_path do
     = icon_map_tag(icons, "logout", ["icon-with-text"])
     = t("layouts.logged_in.logout")
+
+  %hr
+  - if @current_user.is_marketplace_admin?
+    = link_to stripe_payments_path do
+      = icon_map_tag(icons, "list", ["icon-with-text"])
+      / = t("layouts.admin_setting")
+      = 'Stripe payment list'
+
+    = link_to '/en/admin/getting_started_guide' do
+      = icon_map_tag(icons, "admin", ["icon-with-text"])
+      / = t("layouts.admin_setting")
+      = 'Admin setting'

@@ -286,6 +286,7 @@ CREATE TABLE `communities` (
   `small_cover_photo_processing` tinyint(1) DEFAULT NULL,
   `favicon_processing` tinyint(1) DEFAULT NULL,
   `deleted` tinyint(1) DEFAULT NULL,
+  `stripe_fee` float DEFAULT '15',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_communities_on_uuid` (`uuid`),
   KEY `index_communities_on_domain` (`domain`) USING BTREE,
@@ -1444,6 +1445,54 @@ CREATE TABLE `shipping_addresses` (
   PRIMARY KEY (`id`),
   KEY `index_shipping_addresses_on_transaction_id` (`transaction_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `stripe_accounts`
+--
+
+DROP TABLE IF EXISTS `stripe_accounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `stripe_accounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `person_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `community_id` int(11) DEFAULT NULL,
+  `access_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `refresh_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `publishable_key` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `stripe_user_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `token_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `livemode` tinyint(1) DEFAULT NULL,
+  `scope` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `stripe_payments`
+--
+
+DROP TABLE IF EXISTS `stripe_payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `stripe_payments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `person_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `community_id` int(11) DEFAULT NULL,
+  `listing_id` int(11) DEFAULT NULL,
+  `charge_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `amount` int(11) DEFAULT NULL,
+  `last4` int(11) DEFAULT NULL,
+  `fee_amount` int(11) DEFAULT NULL,
+  `payment_status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `stripe_connect` tinyint(1) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3189,4 +3238,12 @@ INSERT INTO schema_migrations (version) VALUES ('20161018105521');
 INSERT INTO schema_migrations (version) VALUES ('20161019125057');
 
 INSERT INTO schema_migrations (version) VALUES ('20161023074355');
+
+INSERT INTO schema_migrations (version) VALUES ('20161130064438');
+
+INSERT INTO schema_migrations (version) VALUES ('20161130113427');
+
+INSERT INTO schema_migrations (version) VALUES ('20161202111647');
+
+INSERT INTO schema_migrations (version) VALUES ('20161202111648');
 
