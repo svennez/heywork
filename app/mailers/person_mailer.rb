@@ -272,7 +272,7 @@ class PersonMailer < ActionMailer::Base
     @no_settings = true
     @resource = email.person
     @confirmation_token = email.confirmation_token
-    @host = "http://146.185.153.80:3000/"# community.full_domain
+    @host = "http://146.185.153.80/" # community.full_domain
     @show_branding_info = !PlanService::API::Api.plans.get_current(community_id: community.id).data[:features][:whitelabel]
     with_locale(email.person.locale, community.locales.map(&:to_sym), community.id) do
       email.update_attribute(:confirmation_sent_at, Time.now)
