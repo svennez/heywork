@@ -189,5 +189,5 @@ gem 'transit-ruby', '~> 0.8'
 
 gem 'httparty'
 gem 'stripe'
-gem 'pg'
+# gem 'pg'
 gem 'puma'
