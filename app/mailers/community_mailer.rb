@@ -3,7 +3,7 @@ include ListingsHelper
 include TruncateHtmlHelper
 
 class CommunityMailer < ActionMailer::Base
-
+  include SendGrid 
   include MailUtils
 
   require "truncate_html"

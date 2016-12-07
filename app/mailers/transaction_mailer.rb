@@ -10,6 +10,7 @@ include ApplicationHelper
 include ListingsHelper
 
 class TransactionMailer < ActionMailer::Base
+  include SendGrid 
   include MailUtils
 
   default :from => APP_CONFIG.sharetribe_mail_from_address
