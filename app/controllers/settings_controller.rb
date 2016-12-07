@@ -48,12 +48,12 @@ class SettingsController < ApplicationController
   end
 
   def stripe_connect
-    url = APP_CONFIG.connect_url
+    url = ENV['connect_url']
     redirect_to url
   end
 
   def connect_callback
-    api_secret = APP_CONFIG.stripe_secret
+    api_secret = ENV['stripe_secret']
     code = params[:code]
 
     response = HTTParty.post("https://connect.stripe.com/oauth/token?client_secret=#{api_secret}&code=#{code}&grant_type=authorization_code")
@@ -63,7 +63,7 @@ class SettingsController < ApplicationController
   end
 
   def stripe_disconnet
-    api_secret = APP_CONFIG.stripe_secret
+    api_secret = ENV['stripe_secret']
     stripe_account = StripeAccount.where(person_id: @current_user.id, community_id: @current_community.id).first
 
     response = HTTParty.post("https://#{api_secret}:@connect.stripe.com/oauth/deauthorize?client_id=ca_9gex5cTJVgvFGTBwuKd266XiYsx4cav2&stripe_user_id=#{stripe_account.stripe_user_id}")

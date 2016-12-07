@@ -65,3 +65,6 @@ client/node_modules
 
 # Mocha results
 test-results.xml
+
+# Ignore application configuration
+/config/application.yml

@@ -84,31 +84,42 @@ Kassi::Application.configure do
   # the I18n.default_locale when a translation can not be found)
   # config.i18n.fallbacks = true #fallbacks defined in intitializers/i18n.rb
 
+  # config.action_mailer.raise_delivery_errors = true
+
+  # mail_delivery_method = (APP_CONFIG.mail_delivery_method.present? ? APP_CONFIG.mail_delivery_method.to_sym : :sendmail)
+
+  # config.action_mailer.delivery_method = mail_delivery_method
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default :charset => "utf-8"
 
-  mail_delivery_method = (APP_CONFIG.mail_delivery_method.present? ? APP_CONFIG.mail_delivery_method.to_sym : :sendmail)
 
-  config.action_mailer.delivery_method = mail_delivery_method
-
-  if mail_delivery_method == :smtp
-    ActionMailer::Base.smtp_settings = {
-      :address              => APP_CONFIG.smtp_email_address,
-      :port                 => APP_CONFIG.smtp_email_port,
-      :domain               => APP_CONFIG.smtp_email_domain,
-      :user_name            => APP_CONFIG.smtp_email_user_name,
-      :password             => APP_CONFIG.smtp_email_password,
-      :authentication       => 'plain',
-      :enable_starttls_auto => true
-    }
-  end
-
-  # Sendmail is used for some mails (e.g. Newsletter) so configure it even when smtp is the main method
-  ActionMailer::Base.sendmail_settings = {
-    :location       => '/usr/sbin/sendmail',
-    :arguments      => '-i -t'
+  ActionMailer::Base.smtp_settings = {
+  #   :address              => APP_CONFIG.smtp_email_address,
+  #   :port                 => APP_CONFIG.smtp_email_port,
+  #   :domain               => APP_CONFIG.smtp_email_domain,
+  #   :user_name            => APP_CONFIG.smtp_email_user_name,
+  #   :password             => APP_CONFIG.smtp_email_password,
+  #   :authentication       => 'plain',
+  #   :enable_starttls_auto => true
+    :address => "smtp.sendgrid.net",
+    :port => 587,
+    :authentication => :plain,
+    :user_name => ENV['USER_EMAIL'],
+    :password => ENV['PASSWORD'],
+    :enable_starttls_auto => true
   }
+    
 
-  ActionMailer::Base.perform_deliveries = true # the "deliver_*" methods are available
+  # # Sendmail is used for some mails (e.g. Newsletter) so configure it even when smtp is the main method
+  # ActionMailer::Base.sendmail_settings = {
+  #   :location       => '/usr/sbin/sendmail',
+  #   :arguments      => '-i -t'
+  # }
+
+  # ActionMailer::Base.perform_deliveries = true # the "deliver_*" methods are available
 
   # We don't need schema dumps in this environment
   config.active_record.dump_schema_after_migration = false
