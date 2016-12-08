@@ -123,4 +123,6 @@ Kassi::Application.configure do
 
   # We don't need schema dumps in this environment
   config.active_record.dump_schema_after_migration = false
+
+  config.skip_email_confirmation = true
 end
