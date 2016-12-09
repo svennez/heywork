@@ -37,7 +37,7 @@ class StripePayment < ActiveRecord::Base
   def self.create_charge(amount, token, fee, stripe_account_id, listing_id)
     charge = Stripe::Charge.create({
         :amount => amount, # amount in cents
-        :currency => "usd",
+        :currency => "sek",
         :source => token,
         :description => "Payment for listing #{listing_id}",
         :application_fee => fee # amount in cents
@@ -57,7 +57,7 @@ class StripePayment < ActiveRecord::Base
       :customer    => customer.id,
       :amount      => amount,
       :description => "Payment for listing #{listing_id}",
-      :currency    => 'usd'
+      :currency    => 'sek'
     )
     charge
   end
