@@ -29,4 +29,17 @@ class CustomFieldValue < ActiveRecord::Base
 
   default_scope { includes(:question).order("custom_fields.sort_priority") }
 
+
+  after_create :update_seats_availability
+  def update_seats_availability
+    listing = self.listing
+    if listing.present?
+      listing.custom_field_values.each do |custom_field_value|
+        if custom_field_value.question.name(I18n.locale) == "Number of seats available"
+          listing.seats_available = custom_field_value.display_value
+          listing.save!
+        end
+      end
+    end
+  end
 end

@@ -47,6 +47,7 @@
 #  shipping_price_cents            :integer
 #  shipping_price_additional_cents :integer
 #  availability                    :string(32)       default("none")
+#  seats_available                 :integer
 #
 # Indexes
 #
@@ -231,4 +232,12 @@ class Listing < ActiveRecord::Base
     Maybe(read_attribute(:unit_type)).to_sym.or_else(nil)
   end
 
+  def get_number_of_seats
+    self.custom_field_values.each do |custom_field_value|
+      if custom_field_value.question.name(I18n.locale) == "Number of seats available"
+        @number_of_seats = custom_field_value.display_value
+      end
+    end
+    @number_of_seats
+  end
 end

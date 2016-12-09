@@ -309,7 +309,6 @@ class ListingsController < ApplicationController
 
       if @listing.save
         upsert_field_values!(@listing, params[:custom_fields])
-
         listing_image_ids =
           if params[:listing_images]
             params[:listing_images].collect { |h| h[:id] }.select { |id| id.present? }
@@ -325,6 +324,7 @@ class ListingsController < ApplicationController
           Delayed::Job.enqueue(NotifyFollowersJob.new(@listing.id, @current_community.id), :run_at => NotifyFollowersJob::DELAY.from_now)
         end
 
+
         flash[:notice] = t(
           "layouts.notifications.listing_created_successfully",
           :new_listing_link => view_context.link_to(t("layouts.notifications.create_new_listing"),new_listing_path)
@@ -338,7 +338,6 @@ class ListingsController < ApplicationController
 
           flash[:show_onboarding_popup] = true
         end
-
         redirect_to @listing, status: 303 and return
       else
         logger.error("Errors in creating listing: #{@listing.errors.full_messages.inspect}")
@@ -519,6 +518,14 @@ class ListingsController < ApplicationController
 
   def verification_required
 
+  end
+
+  def update_seats_available
+    @listing = @current_community.listings.find(params[:id])
+    @listing.seats_available = params[:listing][:seats_available].to_i
+    @listing.save
+    flash[:notice] = 'Seats availability count updated'
+    redirect_to @listing
   end
 
   private

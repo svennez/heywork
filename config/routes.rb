@@ -316,6 +316,7 @@ Kassi::Application.routes.draw do
       member do
         post :follow
         delete :unfollow
+        patch :update_seats_available
       end
       collection do
         get :new_form_content

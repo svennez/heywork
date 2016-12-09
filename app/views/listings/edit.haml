@@ -62,3 +62,11 @@
     - if form_content
 
       = render partial: "listings/form/form_content", locals: form_content.merge(run_js_immediately: false)
+%hr
+.centered-section
+  - if @current_user.is_marketplace_admin?
+    %h1 Update seats available
+    = form_for @listing, url: update_seats_available_listing_path do |f|
+      = f.label :seats_available, "Seats available"
+      = f.text_field :seats_available, :class => "input"
+      = f.submit :save, class: 'button'

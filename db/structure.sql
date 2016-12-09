@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.32, for osx10.10 (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.46, for debian-linux-gnu (i686)
 --
--- Host: 127.0.0.1    Database: sharetribe_development
+-- Host: localhost    Database: sharetribe_production
 -- ------------------------------------------------------
--- Server version	5.7.15-log
+-- Server version	5.5.46-0ubuntu0.14.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -863,6 +863,7 @@ CREATE TABLE `listings` (
   `shipping_price_cents` int(11) DEFAULT NULL,
   `shipping_price_additional_cents` int(11) DEFAULT NULL,
   `availability` varchar(32) DEFAULT 'none',
+  `seats_available` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_listings_on_uuid` (`uuid`),
   KEY `index_listings_on_new_category_id` (`category_id`) USING BTREE,
@@ -1646,7 +1647,7 @@ CREATE TABLE `transactions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-19 15:53:24
+-- Dump completed on 2016-12-09 14:24:41
 INSERT INTO schema_migrations (version) VALUES ('20080806070738');
 
 INSERT INTO schema_migrations (version) VALUES ('20080807071903');
@@ -3246,4 +3247,8 @@ INSERT INTO schema_migrations (version) VALUES ('20161130113427');
 INSERT INTO schema_migrations (version) VALUES ('20161202111647');
 
 INSERT INTO schema_migrations (version) VALUES ('20161202111648');
+
+INSERT INTO schema_migrations (version) VALUES ('20161208093643');
+
+INSERT INTO schema_migrations (version) VALUES ('20161209085337');
 
