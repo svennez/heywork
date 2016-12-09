@@ -146,7 +146,7 @@
         %br
         = link_to 'Disconnect Now', stripe_disconnet_path
       - else
-        = link_to 'Stripe connect',  stripe_connect_person_settings_path, class: "button"
+        = link_to 'Stripe connect',  stripe_connect_person_settings_path, class: "button", target: "_blank"
 
   -# Stripe fee percent
   - if @current_user.is_marketplace_admin?
