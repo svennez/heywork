@@ -108,9 +108,9 @@
 
       = hidden_field_tag(:listing_id, @listing.id)
 
-      %button.book-button
-        .content
-          = action_button_label(@listing)
+      / %button.book-button
+      /   .content
+      /     = action_button_label(@listing)
 
     - if payment_gateway == :paypal && process != :none
       .row
