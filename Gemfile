@@ -193,3 +193,4 @@ gem 'stripe'
 gem 'puma'
 gem 'figaro'
 gem 'sendgrid'
+gem "daemons"

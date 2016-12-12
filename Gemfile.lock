@@ -586,6 +586,7 @@ DEPENDENCIES
   countries (~> 1.2, >= 1.2.2)
   css_parser (~> 1.4.5)
   cucumber-rails (~> 1.4.0)
+  daemons
   dalli (~> 2.6.4)
   database_cleaner (~> 1.1)
   delayed_job (~> 4.1.1)
