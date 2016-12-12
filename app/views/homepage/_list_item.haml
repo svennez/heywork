@@ -23,7 +23,8 @@
           - if price_text.present?
             .home-list-price-quantity{:title => price_text}
               = price_text
-          = "#{seats_available}/#{total_seats}"
+          - unless total_seats.nil? || seats_available.nil?
+            = "#{seats_available}/#{total_seats}"
         - else
           .home-list-listing-shape-value
             = shape_name(listing)
