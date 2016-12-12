@@ -1,3 +1,6 @@
+- listing_obj = Listing.find(listing.id)
+- total_seats = listing_obj.get_number_of_seats
+- seats_available = listing_obj.try(:seats_available)
 - frontpage_fragment_cache("list_item", listing) do
   .home-list-item
     - if listing.listing_images.size > 0
@@ -20,6 +23,7 @@
           - if price_text.present?
             .home-list-price-quantity{:title => price_text}
               = price_text
+          = "#{seats_available}/#{total_seats}"
         - else
           .home-list-listing-shape-value
             = shape_name(listing)

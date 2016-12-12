@@ -18,7 +18,8 @@
     .fluid-thumbnail-grid-image-overlay{:class => "#{modifier_class}"}
     .fluid-thumbnail-grid-image-title{:class => "#{modifier_class}"}
       - unless total_seats.nil? || seats_available.nil?
-        = "#{seats_available} out of #{total_seats} seats available"
+        = "#{seats_available}/#{total_seats}"
+        %br  
       = listing.title
     .fluid-thumbnail-grid-image-price-container{:class => "#{modifier_class}"}
       - if listing.price
