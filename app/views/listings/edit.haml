@@ -68,5 +68,5 @@
     %h1 Update seats available
     = form_for @listing, url: update_seats_available_listing_path do |f|
       = f.label :seats_available, "Seats available"
-      = f.text_field :seats_available, :class => "input"
+      = f.number_field :seats_available, :class => "input"
       = f.submit :save, class: 'button'
