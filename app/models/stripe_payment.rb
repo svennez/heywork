@@ -35,9 +35,11 @@ class StripePayment < ActiveRecord::Base
 
   # when seller have stripe account
   def self.create_charge(amount, token, fee, stripe_account_id, listing_id)
+    listing = Listing.where(id: listing_id).first
+    currency = listing.currency.nil? ? 'SEK' : listing.currency
     charge = Stripe::Charge.create({
         :amount => amount, # amount in cents
-        :currency => "sek",
+        :currency => currency,
         :source => token,
         :description => "Payment for listing #{listing_id}",
         :application_fee => fee # amount in cents
@@ -49,6 +51,8 @@ class StripePayment < ActiveRecord::Base
 
   # when seller doesn't have stripe account
   def self.create_charge_with_customer(amount, token, listing_id, email)
+    listing = Listing.where(id: listing_id).first
+    currency = listing.currency.nil? ? 'SEK' : listing.currency
     customer = Stripe::Customer.create(
       :email => email,
       :source  => token
@@ -57,7 +61,7 @@ class StripePayment < ActiveRecord::Base
       :customer    => customer.id,
       :amount      => amount,
       :description => "Payment for listing #{listing_id}",
-      :currency    => 'sek'
+      :currency    => currency
     )
     charge
   end
