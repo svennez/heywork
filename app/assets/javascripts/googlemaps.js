@@ -77,6 +77,81 @@ function timed_input_on_route(){
   );
 }
 
+// function googlemapMarkerInit(canvas,n_prefix,n_textfield,draggable,community_location_lat,community_location_lon,address) {
+//   prefix = n_prefix;
+//   textfield = n_textfield;
+
+//   if (draggable == undefined)
+//     draggable = false;
+
+//   var latitude = document.getElementById(prefix+ "_latitude");
+//   var longitude = document.getElementById(prefix+ "_longitude");
+//   var input = document.getElementById(textfield)
+//   var visible = true;
+
+//   var myOptions = {
+//     'zoom': 12,
+//     'streetViewControl': false,
+//     'mapTypeControl': false,
+//     'mapTypeId': google.maps.MapTypeId.ROADMAP
+//   }
+
+//   map = new google.maps.Map(document.getElementById(canvas), myOptions);
+//   if (latitude.value != "") {
+//     setMapCenter(latitude.value, longitude.value, true);
+//   } else {
+//     setMapCenter(community_location_lat, community_location_lon, false);
+//   }
+//   geocoder = new google.maps.Geocoder();
+
+//   if (latitude.value != ""){
+//     markerPosition = new google.maps.LatLng(latitude.value,longitude.value);
+//   } else {
+//     markerPosition = defaultCenter;
+//     visible = false;
+//   }
+
+//   marker = new google.maps.Marker({
+//     'map': map,
+//     'draggable': draggable,
+//     'animation': google.maps.Animation.DROP,
+//     'position': markerPosition
+//   });
+
+//   infowindow = new google.maps.InfoWindow();
+
+//   var autocomplete = new google.maps.places.Autocomplete(input);
+//   autocomplete.bindTo('bounds', map);
+
+
+//   if (address != undefined) {
+//     google.maps.event.addListener(marker, 'click', function() {
+//       infowindow.close();
+//       infowindow.setContent(address);
+//       infowindow.open(map,marker);
+//     });
+//   }
+
+//   if (draggable){
+//     google.maps.event.addListener(map, "click",
+//       function(event) {
+//         marker.setPosition(event.latLng);
+//         marker.setVisible(true);
+//         geocoder.geocode({"latLng":event.latLng},update_source);
+//       }
+//     );
+
+//     google.maps.event.addListener(marker, "dragend",
+//       function() {
+//         geocoder.geocode({"latLng":marker.getPosition()},update_source);
+//       }
+//     );
+//   }
+
+//   if(!visible)
+//     marker.setVisible(false);
+// }
+
 function googlemapMarkerInit(canvas,n_prefix,n_textfield,draggable,community_location_lat,community_location_lon,address) {
   prefix = n_prefix;
   textfield = n_textfield;
@@ -86,6 +161,7 @@ function googlemapMarkerInit(canvas,n_prefix,n_textfield,draggable,community_loc
 
   var latitude = document.getElementById(prefix+ "_latitude");
   var longitude = document.getElementById(prefix+ "_longitude");
+  var input = document.getElementById(textfield)
   var visible = true;
 
   var myOptions = {
@@ -109,6 +185,9 @@ function googlemapMarkerInit(canvas,n_prefix,n_textfield,draggable,community_loc
     markerPosition = defaultCenter;
     visible = false;
   }
+
+  var autocomplete = new google.maps.places.Autocomplete(input);
+  autocomplete.bindTo('bounds', map);
 
   marker = new google.maps.Marker({
     'map': map,
@@ -144,7 +223,51 @@ function googlemapMarkerInit(canvas,n_prefix,n_textfield,draggable,community_loc
   }
 
   if(!visible)
+  marker.setVisible(false);
+
+  autocomplete.addListener('place_changed', function() {
+    infowindow.close();
     marker.setVisible(false);
+    var place = autocomplete.getPlace();
+    if (!place.geometry) {
+      // User entered the name of a Place that was not suggested and
+      // pressed the Enter key, or the Place Details request failed.
+      window.alert("No details available for input: '" + place.name + "'");
+      return;
+    }
+
+    // If the place has a geometry, then present it on a map.
+    if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+    } else {
+      map.setCenter(place.geometry.location);
+      map.setZoom(12);  // Why 17? Because it looks good.
+    }
+    marker.setIcon(/** @type {google.maps.Icon} */({
+      url: place.icon,
+      size: new google.maps.Size(71, 71),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(17, 34),
+      scaledSize: new google.maps.Size(35, 35)
+    }));
+
+
+    marker.setPosition(place.geometry.location);
+    marker.setVisible(true);
+    geocoder.geocode({"latLng":marker.getPosition()},update_source);
+
+    var address = '';
+    if (place.address_components) {
+      address = [
+        (place.address_components[0] && place.address_components[0].short_name || ''),
+        (place.address_components[1] && place.address_components[1].short_name || ''),
+        (place.address_components[2] && place.address_components[2].short_name || '')
+      ].join(' ');
+    }
+
+    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+    infowindow.open(map, marker);
+  });
 }
 
 function update_map(field) {
