@@ -1,3 +1,7 @@
 - question_name = custom_field_value.question.name(I18n.locale)
-%b= "#{question_name}:"
-= custom_field_value.display_value
+- if question_name == "Number of seats available"
+  %b= "#{question_name}:"
+  = listing.seats_available
+- else
+  %b= "#{question_name}:"
+  = custom_field_value.display_value

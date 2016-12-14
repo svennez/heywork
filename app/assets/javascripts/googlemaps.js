@@ -175,7 +175,8 @@ function googlemapMarkerInit(canvas,n_prefix,n_textfield,draggable,community_loc
   if (latitude.value != "") {
     setMapCenter(latitude.value, longitude.value, true);
   } else {
-    setMapCenter(community_location_lat, community_location_lon, false);
+    map.setCenter(new google.maps.LatLng(53, 9), 12);
+    // setMapCenter(community_location_lat, community_location_lon, false);
   }
   geocoder = new google.maps.Geocoder();
 

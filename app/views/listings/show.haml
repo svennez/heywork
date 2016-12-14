@@ -86,7 +86,7 @@
       .row
         .col-12
           - custom_field_value.with_type do |question_type|
-            = render :partial => "listings/custom_field_partials/#{question_type}", :locals => { :custom_field_value => custom_field_value }
+            = render :partial => "listings/custom_field_partials/#{question_type}", :locals => { :custom_field_value => custom_field_value, listing: @listing }
 
     - if @current_community.show_listing_publishing_date?
       .row
