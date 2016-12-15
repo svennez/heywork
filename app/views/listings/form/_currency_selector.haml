@@ -7,4 +7,4 @@
   /     = Money.new(1, currencies[0]).symbol
   /     = form.hidden_field :currency, :value => currencies[0]
   / - else
-  = form.select :currency, major_currencies(Money::Currency.table), { :selected => (@listing.currency || "EUR") }
+  = form.select :currency, currency_list, { :selected => (@listing.currency || "EUR") }

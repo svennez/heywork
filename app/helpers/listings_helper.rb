@@ -130,4 +130,7 @@ module ListingsHelper
     t(listing.action_button_tr_key)
   end
 
+  def currency_list
+    ['SEK', 'DKK', 'GBP', 'USD', 'EUR']
+  end
 end
