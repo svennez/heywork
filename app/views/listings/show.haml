@@ -87,7 +87,10 @@
         .col-12
           - custom_field_value.with_type do |question_type|
             = render :partial => "listings/custom_field_partials/#{question_type}", :locals => { :custom_field_value => custom_field_value, listing: @listing }
-
+    = @listing.origin
+    = '1111111111111111111111'
+    = @location.inspect
+    = '1111111111111111111111'
     - if @current_community.show_listing_publishing_date?
       .row
         .col-12

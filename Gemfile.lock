@@ -220,6 +220,7 @@ GEM
       thor (~> 0.19.1)
     formatador (0.2.5)
     fssm (0.2.10)
+    geocoder (1.4.1)
     gherkin (4.0.0)
     git-version-bump (0.15.1)
     globalid (0.3.7)
@@ -603,6 +604,7 @@ DEPENDENCIES
   faraday_middleware (~> 0.10.0)
   figaro
   flying-sphinx (~> 1.2.0)
+  geocoder
   guard-rspec (~> 4.6.5)
   haml (~> 4.0.5)
   httparty

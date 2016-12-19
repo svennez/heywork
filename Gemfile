@@ -194,3 +194,4 @@ gem 'puma'
 gem 'figaro'
 gem 'sendgrid'
 gem "daemons"
+gem 'geocoder'

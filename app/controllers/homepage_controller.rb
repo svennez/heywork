@@ -32,7 +32,7 @@ class HomepageController < ApplicationController
       @show_custom_fields = filters.present? || show_price_filter
       @category_menu_enabled = @show_categories || @show_custom_fields
     end
-
+    @location = request.location
 
     @homepage = true
 
@@ -109,6 +109,8 @@ class HomepageController < ApplicationController
 
       search_result.on_success { |listings|
         @listings = listings
+        # @listings = Listing.distance_calculator(@listings,)
+
         render locals: locals.merge(
                  seo_pagination_links: seo_pagination_links(params, @listings.current_page, @listings.total_pages))
       }.on_error { |e|
