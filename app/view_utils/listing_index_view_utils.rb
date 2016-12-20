@@ -8,6 +8,7 @@ module ListingIndexViewUtils
     :latitude,
     :longitude,
     :distance,
+    :cal_distance,
     :distance_unit,
     :author,
     :description,
@@ -35,7 +36,7 @@ module ListingIndexViewUtils
 
   module_function
 
-  def to_struct(result:, includes:, per_page:, page:)
+  def to_struct(result:, includes:, per_page:, page:, lat:, long:)
     listings = result[:listings].map { |l|
       author =
         if includes.include?(:author)
@@ -60,6 +61,9 @@ module ListingIndexViewUtils
         else
           []
         end
+      listing = Listing.find(l[:id])
+      listing_lat_long = Geocoder.coordinates(listing.origin)
+      cal_distance = Geocoder::Calculations.distance_between([listing_lat_long[0], listing_lat_long[1]], [lat, long])
 
       ListingItem.new(
         l[:id],
@@ -69,6 +73,7 @@ module ListingIndexViewUtils
         l[:latitude],
         l[:longitude],
         l[:distance],
+        cal_distance,
         l[:distance_unit],
         author,
         l[:description],

@@ -34,7 +34,7 @@ gem 'paperclip', '~> 5.1.0'
 gem 'delayed_paperclip', "~> 3.0"
 
 gem 'aws-sdk', '~> 2'
-gem "will_paginate", '~>3.0.5'
+gem "will_paginate"
 gem 'dalli', "~> 2.6.4"
 gem "memcachier", "~> 0.0.2"
 gem 'kgio', "~>2.9.2"

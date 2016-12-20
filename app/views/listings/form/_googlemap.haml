@@ -1,11 +1,18 @@
 #listing_map_canvas.jsmap
-
-- content_for :map_js do
-  :javascript
-    $(document).ready(function() {
-      var source = "listing_origin";
-      googlemapMarkerInit('listing_map_canvas',"listing_origin_loc_attributes","listing_origin",true, #{tribe_latitude}, #{tribe_longitude});
-    });
+- if params[:action] == 'new_form_content'
+  - content_for :map_js do
+    :javascript
+      $(document).ready(function() {
+        var source = "listing_origin";
+        googlemapMarkerInit('listing_map_canvas',"listing_origin_loc_attributes","listing_origin",true, #{@location.latitude}, #{@location.longitude});
+      });
+- else
+  - content_for :map_js do
+    :javascript
+      $(document).ready(function() {
+        var source = "listing_origin";
+        googlemapMarkerInit('listing_map_canvas',"listing_origin_loc_attributes","listing_origin",true);
+      });
 
 - if run_js_immediately
   = yield :map_js

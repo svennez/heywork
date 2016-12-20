@@ -236,7 +236,7 @@ class ListingsController < ApplicationController
     return redirect_to action: :new unless request.xhr?
 
     @listing = Listing.new
-
+    @location = request.location
     if !@current_user.location.nil?
       temp = @current_user.location
       @listing.build_origin_loc(temp.attributes)

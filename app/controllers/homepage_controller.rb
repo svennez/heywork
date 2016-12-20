@@ -1,6 +1,6 @@
 # encoding: utf-8
 class HomepageController < ApplicationController
-
+  require 'will_paginate/array'
   before_filter :save_current_path, :except => :sign_in
 
   APP_DEFAULT_VIEW_TYPE = "grid"
@@ -32,8 +32,6 @@ class HomepageController < ApplicationController
       @show_custom_fields = filters.present? || show_price_filter
       @category_menu_enabled = @show_categories || @show_custom_fields
     end
-    @location = request.location
-
     @homepage = true
 
     filter_params = {}
@@ -66,8 +64,9 @@ class HomepageController < ApplicationController
     location_in_use = enabled_search_modes[:location]
 
     current_page = Maybe(params)[:page].to_i.map { |n| n > 0 ? n : 1 }.or_else(1)
+    location = request.location
 
-    search_result = find_listings(params, current_page, per_page, compact_filter_params, includes.to_set, location_in_use, keyword_in_use)
+    search_result = find_listings(params, current_page, per_page, compact_filter_params, includes.to_set, location_in_use, keyword_in_use, location.latitude, location.longitude)
 
     if @view_type == 'map'
       viewport = viewport_geometry(params[:boundingbox], params[:lc], @current_community.location)
@@ -109,8 +108,8 @@ class HomepageController < ApplicationController
 
       search_result.on_success { |listings|
         @listings = listings
-        # @listings = Listing.distance_calculator(@listings,)
-
+        @listings = @listings.sort{|a,b| a.cal_distance && b.cal_distance ? a.cal_distance.to_f <=> b.cal_distance.to_f : a.cal_distance ? -1 : 1 }
+        @listings = @listings.paginate(page: current_page, :per_page => per_page)
         render locals: locals.merge(
                  seo_pagination_links: seo_pagination_links(params, @listings.current_page, @listings.total_pages))
       }.on_error { |e|
@@ -136,7 +135,7 @@ class HomepageController < ApplicationController
 
   private
 
-  def find_listings(params, current_page, listings_per_page, filter_params, includes, location_search_in_use, keyword_search_in_use)
+  def find_listings(params, current_page, listings_per_page, filter_params, includes, location_search_in_use, keyword_search_in_use, latitude=0, longitude=0)
     Maybe(@current_community.categories.find_by_url_or_id(params[:category])).each do |category|
       filter_params[:categories] = category.own_and_subcategory_ids
       @selected_category = category
@@ -205,7 +204,9 @@ class HomepageController < ApplicationController
             result: res,
             includes: includes,
             page: search[:page],
-            per_page: search[:per_page]
+            per_page: search[:per_page],
+            lat: latitude,
+            long: longitude
           )
         )
       }

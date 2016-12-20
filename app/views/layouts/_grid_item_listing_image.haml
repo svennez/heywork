@@ -7,9 +7,6 @@
   - Listing price
   - Adds `modifier_class` which can be used for view specific fine tunings
 
-/ - listing_obj = Listing.find(listing.id)
-/ - total_seats = listing_obj.get_number_of_seats
-/ - seats_available = listing_obj.try(:seats_available)
 = link_to(listing_path(listing.url), :class => "#{modifier_class} fluid-thumbnail-grid-image-item-link") do
   .fluid-thumbnail-grid-image-image-container{:class => "#{modifier_class}"}
     - with_first_listing_image(listing) do |first_image_url|
@@ -19,9 +16,7 @@
     .fluid-thumbnail-grid-image-title{:class => "#{modifier_class}"} 
       .title
         = listing.title
-      / .seat_available.pull-right
-      /   - unless total_seats.nil? || seats_available.nil?
-      /     = "#{seats_available}/#{total_seats}"  
+        = listing.cal_distance
     .fluid-thumbnail-grid-image-price-container{:class => "#{modifier_class}"}
       - if listing.price
         %span.fluid-thumbnail-grid-image-price

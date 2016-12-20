@@ -11,6 +11,7 @@ class SettingsController < ApplicationController
     add_location_to_person!(target_user)
     flash.now[:notice] = t("settings.profile.image_is_processing") if target_user.image.processing?
     @selected_left_navi_link = "profile"
+    @location = request.location
     render locals: {target_user: target_user}
   end
 
