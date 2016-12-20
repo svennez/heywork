@@ -63,7 +63,7 @@ module ListingIndexViewUtils
         end
       listing = Listing.find(l[:id])
       listing_lat_long = Geocoder.coordinates(listing.origin)
-      cal_distance = Geocoder::Calculations.distance_between([listing_lat_long[0], listing_lat_long[1]], [lat, long])
+      cal_distance = Geocoder::Calculations.distance_between([0, 0], [lat, long])
 
       ListingItem.new(
         l[:id],
