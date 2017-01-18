@@ -43,7 +43,7 @@ class ListingsController < ApplicationController
 
         if request.xhr? && username # AJAX request to load on person's listings for profile view
           @person = Person.find_by!(username: username, community_id: @current_community.id)
-
+          location = request.location
           # Returns the listings for one person formatted for profile page view
           per_page = params[:per_page] || 1000 # the point is to show all here by default
           includes = [:author, :listing_images]
@@ -72,7 +72,9 @@ class ListingsController < ApplicationController
               result: res,
               includes: includes,
               page: search[:page],
-              per_page: search[:per_page]
+              per_page: search[:per_page],
+              lat: location.latitude,
+              long: location.longitude
             ))
             }.data
 

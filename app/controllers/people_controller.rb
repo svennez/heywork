@@ -27,7 +27,8 @@ class PeopleController < Devise::RegistrationsController
     redirect_to landing_page_path and return if @current_community.private? && !@current_user
     @selected_tribe_navi_tab = "members"
     @community_membership = CommunityMembership.find_by_person_id_and_community_id_and_status(@person.id, @current_community.id, "accepted")
-
+    location = request.location
+    
     include_closed = @current_user == @person && params[:show_closed]
     search = {
       author_id: @person.id,
@@ -54,7 +55,9 @@ class PeopleController < Devise::RegistrationsController
         result: res,
         includes: includes,
         page: search[:page],
-        per_page: search[:per_page]
+        per_page: search[:per_page],
+        lat: location.latitude,
+        long: location.longitude
       ))
     }.data
 
