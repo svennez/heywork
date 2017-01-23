@@ -116,16 +116,20 @@
       .row
         .col-12
           = render :partial => "listing_conversations/paypal_payment_methods", locals: { country_code: country_code }
-    
+
     / Stripe Button
-    = form_tag stripe_payments_path, method: :post do
-      = hidden_field_tag :amount, @listing.price_cents
-      = hidden_field_tag :listing_id, @listing.id
-      - if @listing.author.has_stripe_account(@current_community.id) 
-        = hidden_field_tag :stripe_account_id, @listing.author.get_stripe_account(@current_community.id).stripe_user_id
-        %script.stripe-button{"data-amount" => "#{@listing.price_cents}", "data-description" => "#{@listing.title}", "data-key" => "#{@listing.author.get_stripe_account(@current_community.id).publishable_key}", "data-locale" => "auto", :src => "https://checkout.stripe.com/checkout.js", "data-currency" => "#{@listing.currency}"}
-      - else
-        %script.stripe-button{"data-amount" => "#{@listing.price_cents}", "data-description" => "#{@listing.title}", "data-key" => APP_CONFIG.stripe_publishable, "data-locale" => "auto", :src => "https://checkout.stripe.com/checkout.js", "data-currency" => "#{@listing.currency}"}
+    - if @current_user.present?
+      = form_tag stripe_payments_path, method: :post do
+        = hidden_field_tag :amount, @listing.price_cents
+        = hidden_field_tag :listing_id, @listing.id
+        - if @listing.author.has_stripe_account(@current_community.id)
+          = hidden_field_tag :stripe_account_id, @listing.author.get_stripe_account(@current_community.id).stripe_user_id
+          %script.stripe-button{"data-amount" => "#{@listing.price_cents}", "data-description" => "#{@listing.title}", "data-key" => "#{@listing.author.get_stripe_account(@current_community.id).publishable_key}", "data-locale" => "auto", :src => "https://checkout.stripe.com/checkout.js", "data-currency" => "#{@listing.currency}"}
+        - else
+          %script.stripe-button{"data-amount" => "#{@listing.price_cents}", "data-description" => "#{@listing.title}", "data-key" => APP_CONFIG.stripe_publishable, "data-locale" => "auto", :src => "https://checkout.stripe.com/checkout.js", "data-currency" => "#{@listing.currency}"}
+    - else
+      = link_to login_path, class: "button", id: "header-login-link" do
+        = t("header.login")
 
   - if is_authorized
     .listing-view-admin-links

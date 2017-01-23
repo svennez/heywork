@@ -1,5 +1,8 @@
 class StripePaymentsController < ApplicationController
 
+  before_filter :only => [ :create, :index ] do |controller|
+    controller.ensure_logged_in t("layouts.notifications.you_must_log_in_to_view_your_settings")
+  end
   before_filter :check_access, only: [:index]
 
   def create
