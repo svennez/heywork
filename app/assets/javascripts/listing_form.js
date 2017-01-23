@@ -459,6 +459,8 @@ window.ST = window.ST || {};
           error.insertAfter($(".shipping-price-default"));
         } else if (element.attr("name") == "listing[shipping_price_additional]") {
           error.insertAfter($(".js-shipping-price-additional"));
+        } else if (element.attr("name") == "listing_images[][id]"){
+          error.insertAfter($("#image-uploader-container"));
         } else {
           error.insertAfter(element);
         }
@@ -470,6 +472,7 @@ window.ST = window.ST || {};
         "listing[price]": {required: pr, money: true, minimum_price_required: [minimum_price, subunit_to_unit]},
         "listing[shipping_price]": {money: true},
         "listing[shipping_price_additional]": {money: true},
+        "listing_images[][id]" : { required: true },
         "listing[valid_until(1i)]": { min_date: true, max_date: true }
       }),
       messages: {

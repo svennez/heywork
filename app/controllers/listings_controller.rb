@@ -306,48 +306,65 @@ class ListingsController < ApplicationController
 
     @listing = Listing.new(listing_params)
 
-    ActiveRecord::Base.transaction do
-      @listing.author = @current_user
+    listing_image_ids = params[:listing_images].collect { |h| h[:id] }.select { |id| id.present? }
+    if listing_image_ids.blank?
+      flash[:error] = "Listing images can't be blank. Please upload a image"
+      category_tree = CategoryViewUtils.category_tree(
+        categories: ListingService::API::Api.categories.get_all(community_id: @current_community.id)[:data],
+        shapes: get_shapes,
+        locale: I18n.locale,
+        all_locales: @current_community.locales
+      )
 
-      if @listing.save
-        upsert_field_values!(@listing, params[:custom_fields])
-        listing_image_ids =
-          if params[:listing_images]
-            params[:listing_images].collect { |h| h[:id] }.select { |id| id.present? }
-          else
-            logger.error("Listing images array is missing", nil, {params: params})
-            []
+      render :new, locals: {
+        categories: @current_community.top_level_categories,
+        subcategories: @current_community.subcategories,
+        shapes: get_shapes,
+        category_tree: category_tree
+      }
+    else
+      ActiveRecord::Base.transaction do
+        @listing.author = @current_user
+
+        if @listing.save
+          upsert_field_values!(@listing, params[:custom_fields])
+          listing_image_ids =
+            if params[:listing_images]
+              params[:listing_images].collect { |h| h[:id] }.select { |id| id.present? }
+            else
+              logger.error("Listing images array is missing", nil, {params: params})
+              []
+            end
+
+          ListingImage.where(id: listing_image_ids, author_id: @current_user.id).update_all(listing_id: @listing.id)
+
+          Delayed::Job.enqueue(ListingCreatedJob.new(@listing.id, @current_community.id))
+          if @current_community.follow_in_use?
+            Delayed::Job.enqueue(NotifyFollowersJob.new(@listing.id, @current_community.id), :run_at => NotifyFollowersJob::DELAY.from_now)
           end
 
-        ListingImage.where(id: listing_image_ids, author_id: @current_user.id).update_all(listing_id: @listing.id)
+          flash[:notice] = t(
+            "layouts.notifications.listing_created_successfully",
+            :new_listing_link => view_context.link_to(t("layouts.notifications.create_new_listing"),new_listing_path)
+          ).html_safe
 
-        Delayed::Job.enqueue(ListingCreatedJob.new(@listing.id, @current_community.id))
-        if @current_community.follow_in_use?
-          Delayed::Job.enqueue(NotifyFollowersJob.new(@listing.id, @current_community.id), :run_at => NotifyFollowersJob::DELAY.from_now)
+          # Onboarding wizard step recording
+          state_changed = Admin::OnboardingWizard.new(@current_community.id)
+            .update_from_event(:listing_created, @listing)
+          if state_changed
+            report_to_gtm({event: "km_record", km_event: "Onboarding listing created"})
+
+            flash[:show_onboarding_popup] = true
+          end
+          redirect_to @listing, status: 303 and return
+        else
+          logger.error("Errors in creating listing: #{@listing.errors.full_messages.inspect}")
+          flash[:error] = t(
+            "layouts.notifications.listing_could_not_be_saved",
+            :contact_admin_link => view_context.link_to(t("layouts.notifications.contact_admin_link_text"), new_user_feedback_path, :class => "flash-error-link")
+          ).html_safe
+          redirect_to new_listing_path and return
         end
-
-
-        flash[:notice] = t(
-          "layouts.notifications.listing_created_successfully",
-          :new_listing_link => view_context.link_to(t("layouts.notifications.create_new_listing"),new_listing_path)
-        ).html_safe
-
-        # Onboarding wizard step recording
-        state_changed = Admin::OnboardingWizard.new(@current_community.id)
-          .update_from_event(:listing_created, @listing)
-        if state_changed
-          report_to_gtm({event: "km_record", km_event: "Onboarding listing created"})
-
-          flash[:show_onboarding_popup] = true
-        end
-        redirect_to @listing, status: 303 and return
-      else
-        logger.error("Errors in creating listing: #{@listing.errors.full_messages.inspect}")
-        flash[:error] = t(
-          "layouts.notifications.listing_could_not_be_saved",
-          :contact_admin_link => view_context.link_to(t("layouts.notifications.contact_admin_link_text"), new_user_feedback_path, :class => "flash-error-link")
-        ).html_safe
-        redirect_to new_listing_path and return
       end
     end
   end
