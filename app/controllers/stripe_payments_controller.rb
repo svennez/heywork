@@ -26,7 +26,7 @@ class StripePaymentsController < ApplicationController
           stripe_connect = true
           stripe_payment = StripePayment.create_payment(@current_user, @current_community, listing_id, charge, fee, stripe_connect)
           flash[:notice] = 'Payment successful'
-          redirect_to '/'
+          redirect_to listing_path(listing_id)
         end
       end
     else
@@ -41,7 +41,7 @@ class StripePaymentsController < ApplicationController
           fee = 0
           stripe_payment = StripePayment.create_payment(@current_user, @current_community, listing_id, charge, fee, stripe_connect)
           flash[:notice] = 'Payment successful'
-          redirect_to '/'
+          redirect_to listing_path(listing_id)
         end
       end
     end

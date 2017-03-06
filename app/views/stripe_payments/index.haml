@@ -6,7 +6,9 @@
       %th Buyer
       %th Seller
       %th Listing url
+      %th Currency
       %th Amount
+      %th Date
       %th Payment to
       %th Transfer Amount
   %tbody
@@ -16,12 +18,16 @@
           = sp.id
         %td
           ="#{sp.person.given_name} #{sp.person.family_name}"
-        %td 
-          = sp.listing.author.given_name
-        %td 
-          = sp.listing.title
         %td
-          = sp.amount
+          = sp.listing.author.given_name
+        %td
+          = link_to sp.listing.title, listing_path(sp.listing.id)
+        %td
+          = sp.listing.try(:currency)
+        %td
+          = sp.amount.nil? ? 'NA' : sp.amount/100
+        %td
+          = sp.created_at.strftime("%Y-%m-%d")
         %td
           -if sp.stripe_connect
             = 'Seller account'
@@ -33,4 +39,4 @@
             =link_to "Transfer to seller", '#'
 
 
-  
+
