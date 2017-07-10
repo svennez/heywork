@@ -147,6 +147,14 @@ $listing-author-avatar-height: 108;
 .listing-author-contact-button {
   @include grey-button;
   width: 100%;
+  border: solid 2px #ff5a5f;
+  color: #ff5a5f;
+  background: transparent;
+  line-height: 40px;
+    &:hover {
+      background: #ff5a5f;
+      color: white;
+    }
 }
 
 // Listing author activity

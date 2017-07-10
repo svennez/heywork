@@ -26,6 +26,9 @@ class StripePaymentsController < ApplicationController
           stripe_connect = true
           stripe_payment = StripePayment.create_payment(@current_user, @current_community, listing_id, charge, fee, stripe_connect)
           flash[:notice] = 'Payment successful'
+          # Decrease the amount of seats left on specific booking. Need to figure out how.
+          puts "*** Removing 1 seat availabe ***"
+          @listing.seats_available - 1
           redirect_to listing_path(listing_id)
         end
       end

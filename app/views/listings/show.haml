@@ -139,6 +139,11 @@
       .col-12
         #listing-message-links
           = render :partial => "listing_actions", locals: { form_path: form_path, payment_gateway: payment_gateway, delivery_opts: delivery_opts, process: process, listing_unit_type: listing_unit_type, country_code: country_code }
+          - if @listing.author != @current_user
+            .listing-author-contact
+              %a#listing-contact{href: contact_to_listing_path(:listing_id => @listing.id.to_s), :class => "listing-author-contact-button"}
+                .content_button
+                  = t(".contact")
 
     .row-with-divider
       .col-12
